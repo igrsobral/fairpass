@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+
+# Runtime
+*.log
+.DS_Store
+coverage/
+
+# Browser test artifacts
+.playwright-mcp/
+
+# IDE
+.idea/
+.vscode/
+
+.planning

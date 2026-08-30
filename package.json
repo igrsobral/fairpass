@@ -1,0 +1,21 @@
+{
+  "name": "fairpass",
+  "private": true,
+  "packageManager": "pnpm@11.24.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "evals": "pnpm -F @fairpass/evals run evals",
+    "format": "prettier --write --ignore-unknown ."
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.6"
+  }
+}
