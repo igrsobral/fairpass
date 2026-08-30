@@ -1,0 +1,4 @@
+{"id":"q-001","naturalLanguage":"2 lower-tier tickets for Oasis in Buenos Aires under $180 total","parsed":{"intent":"buy","eventName":"Oasis","city":"Buenos Aires","quantity":2,"maxTotalCents":18000,"tier":"standard"}}
+{"id":"q-002","naturalLanguage":"cheap standing tickets for the Coldplay show next Friday","parsed":{"intent":"buy","artist":"Coldplay","quantity":1,"tier":"budget"}}
+{"id":"q-003","naturalLanguage":"warn me when VIP goes below R$ 900 for any São Paulo F1 race","parsed":{"intent":"alert","artist":"F1","city":"São Paulo","tier":"premium","maxUnitCents":90000}}
+{"id":"q-004","naturalLanguage":"I want 2 seats next month for Inter Miami under $120 each, prefer aisle","parsed":{"intent":"buy","eventName":"Inter Miami","category":"sports","quantity":2,"maxUnitCents":12000,"dateFrom":"2026-09-01","keywords":["aisle"]}}

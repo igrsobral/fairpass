@@ -1,0 +1,26 @@
+{
+  "name": "@fairpass/evals",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "evals": "tsx src/run.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fairpass/api": "workspace:*",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@fairpass/eslint-config": "workspace:*",
+    "@fairpass/tsconfig": "workspace:*",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.39.5",
+    "tsx": "^4.20.0",
+    "typescript": "~5.9.3",
+    "vitest": "^4.1.11"
+  }
+}
