@@ -1,0 +1,9 @@
+{
+  "extends": "@fairpass/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
+  },
+  "include": ["src", "test", "scripts", "drizzle.config.ts"]
+}

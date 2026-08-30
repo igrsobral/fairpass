@@ -1,0 +1,47 @@
+{
+  "name": "@fairpass/api",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "drizzle",
+    "drizzle.config.ts"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "@trpc/server": "^11.18.0",
+    "drizzle-orm": "^0.45.2",
+    "jose": "^6.2.10",
+    "postgres": "^3.4.9",
+    "superjson": "^2.2.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@fairpass/eslint-config": "workspace:*",
+    "@fairpass/tsconfig": "workspace:*",
+    "@types/node": "^24.0.0",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9.39.5",
+    "tsx": "^4.20.0",
+    "typescript": "~5.9.3",
+    "vitest": "^4.1.11"
+  }
+}
