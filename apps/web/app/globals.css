@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-display:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+  --color-brand-950: #1e1b4b;
+
+  --shadow-card: 0 1px 2px 0 rgb(24 24 27 / 0.05), 0 4px 16px -6px rgb(24 24 27 / 0.06);
+  --shadow-float: 0 16px 40px -16px rgb(24 24 27 / 0.18), 0 4px 12px -6px rgb(24 24 27 / 0.06);
+  --shadow-glass:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.7), 0 1px 2px 0 rgb(24 24 27 / 0.06),
+    0 12px 32px -16px rgb(24 24 27 / 0.18);
+
+  --animate-drift: drift 22s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(28px, -36px, 0) scale(1.12);
+  }
+}
+
+@utility btn {
+  @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 disabled:pointer-events-none disabled:opacity-50;
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth antialiased;
+  }
+
+  body {
+    @apply font-sans text-zinc-900;
+    background-color: #f4f4f5;
+    background-image:
+      radial-gradient(1200px 700px at 88% -12%, rgb(129 140 248 / 0.2), transparent 60%),
+      radial-gradient(900px 550px at -12% 18%, rgb(251 191 36 / 0.12), transparent 55%),
+      radial-gradient(950px 620px at 50% 115%, rgb(34 211 238 / 0.1), transparent 55%),
+      linear-gradient(180deg, #fafafa 0%, #f4f4f5 100%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    @apply bg-brand-600 text-white;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(24 24 27 / 0.16) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: rgb(24 24 27 / 0.16);
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-drift {
+      animation: none !important;
+    }
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-white/60 bg-white/55 shadow-glass ring-1 ring-black/5 backdrop-blur-xl transition;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-white/60 bg-white/60 px-3.5 py-2.5 text-sm text-zinc-900 shadow-glass outline-none backdrop-blur-xl transition placeholder:text-zinc-400 focus:border-brand-300 focus:ring-4 focus:ring-brand-500/15;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs font-semibold tracking-wide text-zinc-600;
+  }
+
+  .btn-primary {
+    @apply btn bg-brand-600/80 text-white shadow-glass ring-1 ring-inset ring-white/30 backdrop-blur-xl hover:bg-brand-600/95 hover:ring-white/40 active:bg-brand-700;
+  }
+
+  .btn-secondary {
+    @apply btn border border-white/60 bg-white/50 text-zinc-900 shadow-glass ring-1 ring-black/5 backdrop-blur-xl hover:bg-white/75 active:bg-white/60;
+  }
+
+  .btn-ghost {
+    @apply btn text-zinc-700 backdrop-blur-xl hover:bg-white/60 active:bg-white/80;
+  }
+
+  .btn-success {
+    @apply btn bg-emerald-600/80 text-white shadow-glass ring-1 ring-inset ring-white/30 backdrop-blur-xl hover:bg-emerald-600/95 active:bg-emerald-700;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-600/80 text-white shadow-glass ring-1 ring-inset ring-white/30 backdrop-blur-xl hover:bg-red-600/95 active:bg-red-700;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ring-black/5;
+  }
+
+  .tile {
+    @apply grid place-items-center rounded-xl bg-brand-500/10 text-brand-600 shadow-glass ring-1 ring-black/5 backdrop-blur-xl transition;
+  }
+}
