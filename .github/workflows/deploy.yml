@@ -1,0 +1,105 @@
+name: Deploy to Production
+
+on:
+  workflow_run:
+    workflows: ["Build & Push Docker Images"]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      rollback:
+        description: 'Rollback to previous version'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set deployment version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.rollback }}" = "true" ]; then
+            echo "VERSION=previous" >> $GITHUB_OUTPUT
+            echo "ROLLBACK=true" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${{ github.sha }}" >> $GITHUB_OUTPUT
+            echo "ROLLBACK=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PRODUCTION_SSH_KEY }}
+
+      - name: Add host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy application
+        env:
+          VERSION: ${{ steps.version.outputs.VERSION }}
+          ROLLBACK: ${{ steps.version.outputs.ROLLBACK }}
+          PRODUCTION_HOST: ${{ secrets.PRODUCTION_HOST }}
+          PRODUCTION_USER: ${{ secrets.PRODUCTION_USER }}
+        run: |
+          # Copy production compose file
+          scp docker-compose.prod.yml ${PRODUCTION_USER}@${PRODUCTION_HOST}:/opt/fairpass/
+
+          # SSH and deploy
+          ssh ${PRODUCTION_USER}@${PRODUCTION_HOST} << 'EOF'
+            cd /opt/fairpass
+
+            # Set environment variables
+            export POSTGRES_PASSWORD="${{ secrets.PRODUCTION_POSTGRES_PASSWORD }}"
+            export AUTH_SECRET="${{ secrets.PRODUCTION_AUTH_SECRET }}"
+            export FAIRPASS_OPENAI_API_KEY="${{ secrets.PRODUCTION_OPENAI_API_KEY }}"
+            export OPENAI_API_KEY="${{ secrets.PRODUCTION_OPENAI_API_KEY }}"
+
+            # Pull new images
+            docker compose -f docker-compose.prod.yml pull
+
+            # Run database migrations
+            docker compose -f docker-compose.prod.yml run --rm web pnpm -F @fairpass/api db:migrate
+
+            # Restart services
+            docker compose -f docker-compose.prod.yml up -d --force-recreate
+
+            # Wait for health checks
+            sleep 30
+
+            # Verify health
+            docker compose -f docker-compose.prod.yml ps
+          EOF
+
+      - name: Verify deployment
+        env:
+          PRODUCTION_HOST: ${{ secrets.PRODUCTION_HOST }}
+        run: |
+          # Check if services are healthy
+          curl -f http://${PRODUCTION_HOST}:3000/api/trpc/health || exit 1
+          curl -f http://${PRODUCTION_HOST}:8000/health || exit 1
+
+      - name: Rollback on failure
+        if: failure()
+        env:
+          PRODUCTION_HOST: ${{ secrets.PRODUCTION_HOST }}
+          PRODUCTION_USER: ${{ secrets.PRODUCTION_USER }}
+        run: |
+          ssh ${PRODUCTION_USER}@${PRODUCTION_HOST} << 'EOF'
+            cd /opt/fairpass
+            docker compose -f docker-compose.prod.yml down
+            docker compose -f docker-compose.prod.yml up -d
+          EOF

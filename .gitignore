@@ -32,5 +32,6 @@ coverage/
 .vscode/
 
 .planning
+.slim/deepwork/
 
 .env
