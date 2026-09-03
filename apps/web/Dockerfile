@@ -31,9 +31,7 @@ COPY --from=deps /app/packages/api/node_modules ./packages/api/node_modules
 # Copy source code
 COPY . .
 
-# Build shared packages first
-RUN pnpm -F @fairpass/tsconfig build
-RUN pnpm -F @fairpass/eslint-config build
+# Build shared package first
 RUN pnpm -F @fairpass/api build
 
 # Build web app
