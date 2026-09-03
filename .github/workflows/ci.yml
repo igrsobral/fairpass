@@ -13,6 +13,20 @@ jobs:
   typescript:
     name: TypeScript (typecheck + lint + test + build)
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: fairpass
+          POSTGRES_PASSWORD: fairpass
+          POSTGRES_DB: fairpass
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U fairpass -d fairpass"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -43,6 +57,16 @@ jobs:
   python:
     name: Python (ai-engine)
     runs-on: ubuntu-latest
+    services:
+      qdrant:
+        image: qdrant/qdrant:latest
+        ports:
+          - 6335:6333
+        options: >-
+          --health-cmd "curl -f http://localhost:6333/healthz || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
