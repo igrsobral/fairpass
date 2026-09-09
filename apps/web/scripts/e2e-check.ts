@@ -40,6 +40,8 @@ const trpc = createTRPCProxyClient<AppRouter>({
 });
 
 const results: string[] = [];
+console.log('as')
+
 function check(name: string, ok: boolean, extra?: string): void {
   results.push(`${ok ? "PASS" : "FAIL"} ${name}${extra ? ` — ${extra}` : ""}`);
 }
@@ -57,7 +59,7 @@ async function main(): Promise<void> {
   check(
     "listings.forDate returns trust + deviation",
     listings.length > 0 &&
-      listings.every((r) => typeof r.sellerTrustScore === "number" && typeof r.deviationPct === "number"),
+    listings.every((r) => typeof r.sellerTrustScore === "number" && typeof r.deviationPct === "number"),
     `${listings.length} listed`,
   );
 
