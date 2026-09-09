@@ -8,11 +8,14 @@ WORKDIR /app
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@11.24.0 --activate
 
-# Copy workspace root files
+# Copy workspace manifest files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/web/package.json ./apps/web/
 COPY packages/api/package.json ./packages/api/
 COPY packages/tsconfig/package.json ./packages/tsconfig/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
+COPY packages/evals/package.json ./packages/evals/
+COPY packages/mcp-server/package.json ./packages/mcp-server/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
@@ -49,7 +52,6 @@ RUN corepack enable && corepack prepare pnpm@11.24.0 --activate
 # Copy built application
 COPY --from=builder /app/apps/web/.next/standalone ./
 COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=builder /app/apps/web/public ./apps/web/public
 
 # Copy package.json for the web app
 COPY --from=builder /app/apps/web/package.json ./apps/web/
